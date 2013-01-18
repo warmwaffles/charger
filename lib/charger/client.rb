@@ -3,9 +3,9 @@ module Charger
   class Client
     attr_accessor :api_key, :subdomain
 
-    def initialize api_key, subdomain
-      @api_key = api_key
-      @subdomain = subdomain
+    def initialize params={}
+      @api_key = params[:api_key] ? params[:api_key] : Charger.api_key
+      @subdomain = params[:subdomain] ? params[:subdomain] : Charger.subdomain
     end
 
     def get resource, headers={}
@@ -35,6 +35,5 @@ module Charger
       "https://#{@api_key}:x@#{@subdomain}.chargify.com/#{req}"
     end
   end
-
 
 end
