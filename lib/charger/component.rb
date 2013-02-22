@@ -8,7 +8,7 @@ module Charger
     attribute :unit_name, String
     attribute :unit_price, Float
     attribute :pricing_scheme, String
-    attribute :prices, Array[Component::Price]
+    attribute :prices, Array[Price]
     attribute :product_family_id, Integer
     attribute :kind, String
     attribute :archived, Boolean

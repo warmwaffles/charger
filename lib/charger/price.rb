@@ -1,6 +1,6 @@
 module Charger
 
-  class Component::Price
+  class Price
     include Virtus
 
     attribute :ending_quantity,   Integer

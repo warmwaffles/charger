@@ -10,18 +10,26 @@ module Charger
 
     def get resource, headers={}
       JSON.parse(RestClient.get(resource_url(resource), rest_headers(headers)))
+    rescue RestClient::Exception => e
+      raise Charger::Exception.new(e.response)
     end
 
     def post resource, payload, headers={}
       JSON.parse(RestClient.post(resource_url(resource), payload, rest_headers(headers)))
+    rescue RestClient::Exception => e
+      raise Charger::Exception.new(e.response)
     end
 
     def put resource, payload, headers={}
       JSON.parse(RestClient.put(resource_url(resource), payload, rest_headers(headers)))
+    rescue RestClient::Exception => e
+      raise Charger::Exception.new(e.response)
     end
 
     def delete resource, headers={}
       JSON.parse(RestClient.delete(resource_url(resource), rest_headers(headers)))
+    rescue RestClient::Exception => e
+      raise Charger::Exception.new(e.response)
     end
 
     private

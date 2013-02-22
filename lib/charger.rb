@@ -1,3 +1,32 @@
+require 'virtus'
+require 'active_support'
+require 'active_model'
+require 'rest-client'
+require 'json'
+
+require 'charger/exception'
+require 'charger/resource'
+require 'charger/request'
+require 'charger/price'
+require 'charger/component'
+require 'charger/component/metered'
+require 'charger/component/on_off'
+require 'charger/component/quantity_based'
+require 'charger/credit_card'
+require 'charger/customer'
+require 'charger/event'
+require 'charger/line_item'
+require 'charger/product_family'
+require 'charger/product'
+require 'charger/transaction'
+require 'charger/statement'
+require 'charger/subscription'
+require 'charger/line_item/metered'
+require 'charger/line_item/on_off'
+require 'charger/line_item/quantity_based'
+require 'charger/client'
+require 'charger/configuration'
+
 module Charger
   class << self
     # The hash of configurations
