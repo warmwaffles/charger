@@ -1,16 +1,16 @@
 module Charger
 
   class ProductFamily
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     attribute :id, Integer
     attribute :name, String
     attribute :handle, String
     attribute :accounting_code, String
     attribute :description, String
+
+    validates :name,   presence: true
+    validates :handle, presence: true
 
     # @param [Boolean] force will cause this to un-cache the results
     def products force=false

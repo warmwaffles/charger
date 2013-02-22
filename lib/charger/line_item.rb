@@ -1,10 +1,7 @@
 module Charger
 
   class LineItem
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     attribute :subscription_id, Integer
     attribute :component_id, Integer
@@ -12,10 +9,9 @@ module Charger
     attribute :unit_name, String
     attribute :kind, String
 
-    # @param [Integer] the id of the subscription
+    # @param [Integer] id the id of the subscription
     # @return [Array<LineItem>]
     def self.find_by_subscription_id id
-      client = Client.new
       items = []
 
       client.get("subscriptions/#{id}/components").each do |data|

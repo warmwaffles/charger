@@ -1,10 +1,7 @@
 module Charger
 
   class CreditCard
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     VAULTS = %w{cancellation_message trust_commerce payment_express beanstream braintree1}
 

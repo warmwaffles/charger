@@ -1,10 +1,7 @@
 module Charger
 
   class Customer
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     attribute :id, Integer
     attribute :first_name, String

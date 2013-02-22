@@ -1,10 +1,7 @@
 module Charger
 
   class Product
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     attribute :id, Integer
     attribute :price_in_cents, Integer
@@ -30,7 +27,6 @@ module Charger
     attribute :archived_at, DateTime
 
     def self.find_by_product_family_id id
-      client = Client.new
       products = []
       client.get("product_families/#{id}/products") do |data|
         products << new(data['product'])
@@ -40,6 +36,10 @@ module Charger
 
     def persisted?
       !!id
+    end
+
+    def self.client
+      Charger.client
     end
   end
 

@@ -1,31 +1,59 @@
-require "charger/version"
-
 module Charger
   class << self
-    # Your api key assigned to you buy them
-    @@api_key = 'notset'
+    # The hash of configurations
+    @@configurations = {}
 
-    # The chargify site
-    @@subdomain = 'notset'
+    # The current client
+    @@current = nil
 
     def configure
       yield self
     end
   end
 
-  def self.api_key
-    @@api_key
+  # Add a configuration to Charger
+  #
+  # @param [Hash] params
+  # @return [void]
+  def self.site= params={}
+    return unless params[:subdomain] || params[:api_key]
+    config = Configuration.new(params)
+    @@configurations[config.subdomain] = config
+    @@current = config
   end
 
-  def self.api_key= api_key
-    @@api_key = api_key
+  # Switches between configurations. Useful if you want to connect to multiple
+  # chargify accounts at once.
+  #
+  # @return [Boolean]
+  def self.switch subdomain
+    @@current = @@configurations[subdomain]
+    true
+  rescue
+    false
   end
 
-  def self.subdomain
-    @@subdomain
+  # Clears all configurations
+  #
+  # @return [void]
+  def self.clear
+    @@configurations = Hash.new
+    @@current = nil
   end
 
-  def self.subdomain= subdomain
-    @@subdomain = subdomain
+  # @return [Charger::Client]
+  def self.client
+    @@current.client
+  rescue
+    nil
   end
+
+  def self.configurations
+    @@configurations
+  end
+
+  def self.current
+    @@current
+  end
+
 end

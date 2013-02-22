@@ -1,10 +1,7 @@
 module Charger
 
   class Subscription
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     STATES = %w{trialing trial_ended assessing active soft_failure past_due suspended canceled unpaid expired}
 
@@ -14,7 +11,6 @@ module Charger
     attribute :current_period_started_at, DateTime
     attribute :current_period_ends_at, DateTime
     attribute :next_assessment_at, DateTime
-    attribute :trial_started_at, DateTime
     attribute :trial_started_at, DateTime
     attribute :trial_ended_at, DateTime
     attribute :activated_at, DateTime
@@ -43,7 +39,6 @@ module Charger
     #   not found.
     # @return [Subscription]
     def self.find id
-      client = Client.new
       new(client.get("subscriptions/#{id}")['subscription'])
     end
 
@@ -52,7 +47,6 @@ module Charger
     #
     # @return [Array<Subscription>]
     def self.all
-      client = Client.new
       subscriptions = []
 
       num = 1
@@ -72,7 +66,6 @@ module Charger
     # @param [Integer] limit max is 200 and default is 20
     # @return [Array<Subscription>]
     def self.page num=1, limit=20
-      client = Client.new
       subscriptions = []
       client.get("subscriptions", params: {page: num, per_page: limit}).each do |data|
         subscriptions << new(data['subscription'])
@@ -137,6 +130,26 @@ module Charger
       !!id
     end
 
+    def activated_on? date
+      return false unless activated?
+      activated_between?(date.beginning_of_day, date.end_of_day)
+    end
+
+    def activated_between? a, b
+      return false unless activated?
+      activated_at > a && activated_at < b
+    end
+
+    def canceled_on? date
+      return false unless canceled?
+      canceled_between?(date.beginning_of_day, date.end_of_day)
+    end
+
+    def canceled_between? a, b
+      return false unless canceled?
+      canceled_at > a && canceled_at < b
+    end
+
     def total
       sum = product.price_in_cents.to_f / 100.0
       line_items.each do |item|
@@ -153,6 +166,15 @@ module Charger
       end
     end
 
+    def events force=false
+      @events = nil if force
+      @events ||= Event.find_by_subscription_id(id)
+      @events.each do |event|
+        event.subscription = self
+      end
+      @events
+    end
+
     # @param [Boolean] force will cause this to un-cache the results
     def line_items force=false
       @line_items = nil if force
@@ -161,6 +183,24 @@ module Charger
         item.subscription = self
       end
       @line_items
+    end
+
+    def transactions force=false
+      @transactions = nil if force
+      @transactions ||= Transaction.find_by_subscription_id(id)
+      @transactions.each do |transaction|
+        transaction.subscription = self
+      end
+      @transactions
+    end
+
+    def statements force=false
+      @statements = nil if force
+      @statements ||= Statement.find_by_subscription_id(id)
+      @statements.each do |statement|
+        statement.subscription = self
+      end
+      @statements
     end
   end
 

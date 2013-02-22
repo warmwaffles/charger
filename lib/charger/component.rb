@@ -1,10 +1,7 @@
 module Charger
 
   class Component
-    include Virtus
-    extend ActiveModel::Naming
-    include ActiveModel::Conversion
-    include ActiveModel::Validations
+    include Resource
 
     attribute :id, Integer
     attribute :name, String
@@ -43,7 +40,6 @@ module Charger
     end
 
     def self.find_by_product_family_id id
-      client = Client.new
       components = []
 
       client.get("product_families/#{id}/components").each do |data|
@@ -61,7 +57,6 @@ module Charger
     end
 
     def self.find product_family_id, id
-      client = Client.new
       new(client.get("product_families/#{product_family_id}/components/#{id}")['component'])
     end
   end
