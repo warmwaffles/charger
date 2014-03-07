@@ -1,7 +1,7 @@
 module Charger
 
   class Price
-    include Virtus
+    include Virtus.model
 
     attribute :ending_quantity,   Integer
     attribute :starting_quantity, Integer, default: 0

@@ -3,7 +3,7 @@ module Charger
     extend ActiveSupport::Concern
 
     included do
-      include Virtus
+      include Virtus.model
       extend ActiveModel::Naming
       include ActiveModel::Conversion
       include ActiveModel::Validations
