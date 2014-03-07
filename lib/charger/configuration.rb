@@ -1,7 +1,7 @@
 module Charger
 
   class Configuration
-    include Virtus
+    include Virtus.model
 
     attribute :api_key, String
     attribute :subdomain, String
